@@ -1,8 +1,7 @@
 "use client";
-import Card from "../atoms/card";
-export default function Home() {
- 
 
+import Card from "./atoms/Card";
+export default function Home() {
   return (
     <>
       <Card/>
