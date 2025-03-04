@@ -1,11 +1,12 @@
-"use client";
 import { getAllFiles } from "@/app/service/service";
 import { useEffect, useState } from "react";
+import Modal from "./modal";
 
 const Card = () => {
   const [fileList, setFileList] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
   const [error, setError] = useState(null);
+  const [openModal, setOpenModal] = useState(false); 
 
   const getAllFile = async () => {
     try {
@@ -34,57 +35,50 @@ const Card = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div style={{ padding: "15px", width: "100%" }}>
-      <div className="table-container mt-3 mb-5">
-        <table
-          className="responsive-table"
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            tableLayout: "auto",
-          }}
+    <div className="w-full p-4">
+      <div className="flex justify-between items-center mt-5">
+        <button
+          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 justify-end ml-auto"
+          onClick={() => setOpenModal(true)} 
         >
-          <thead className="head">
-            <tr>
-              <th style={{ padding: "10px", borderBottom: "2px solid #ddd", textAlign: "left" }}>
-                Nombre
-              </th>
-              <th style={{ padding: "10px", borderBottom: "2px solid #ddd", textAlign: "left" }}>
-                Apellido
-              </th>
-              <th style={{ padding: "10px", borderBottom: "2px solid #ddd", textAlign: "left" }}>
-                No Cc.
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {fileList.length > 0 ? (
-              fileList.map((file, index) => (
-                <tr key={index}>
-                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "left" }}>
-                    {file.nombre}
-                  </td>
-                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "left" }}>
-                    {file.apellido}
-                  </td>
-                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "left" }}>
-                    {file.documento}
+          Agregar nuevo abonado
+        </button>
+      </div>
+        <Modal open={openModal} setOpen={setOpenModal}/>
+         
+      <div className="mt-5 w-full">
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border-collapse">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 border-b-2">Nombre</th>
+                <th className="px-4 py-2 border-b-2">Apellido</th>
+                <th className="px-4 py-2 border-b-2">No Cc.</th>
+                <th className="px-4 py-2 border-b-2">Tribuna</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fileList.length > 0 ? (
+                fileList.map((file, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-2 border-b">{file.nombre}</td>
+                    <td className="px-4 py-2 border-b">{file.apellido}</td>
+                    <td className="px-4 py-2 border-b">{file.documento}</td>
+                    <td className="px-4 py-2 border-b">{file.tribuna}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center py-4">
+                    No hay archivos disponibles.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" style={{ padding: "10px", textAlign: "center" }}>
-                  No hay archivos disponibles.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
 };
-
 export default Card;
-
