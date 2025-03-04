@@ -2,7 +2,6 @@ import React from 'react';
 import { useFormik } from 'formik';
 
 const FormularioTribuna = () => {
-  // Inicializa Formik
   const formik = useFormik({
     initialValues: {
       nombre: '',
@@ -18,7 +17,6 @@ const FormularioTribuna = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div>
-        <label htmlFor="nombre">Nombre</label>
         <input
           id="nombre"
           name="nombre"
@@ -29,7 +27,6 @@ const FormularioTribuna = () => {
       </div>
 
       <div>
-        <label htmlFor="apellido">Apellido</label>
         <input
           id="apellido"
           name="apellido"
@@ -40,7 +37,6 @@ const FormularioTribuna = () => {
       </div>
 
       <div>
-        <label htmlFor="cedula">Número de Cédula</label>
         <input
           id="cedula"
           name="cedula"
@@ -51,7 +47,6 @@ const FormularioTribuna = () => {
       </div>
 
       <div>
-        <label htmlFor="tribuna">Tribuna</label>
         <input
           id="tribuna"
           name="tribuna"

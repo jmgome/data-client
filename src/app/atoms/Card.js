@@ -1,6 +1,6 @@
 import { getAllFiles } from "@/app/service/service";
 import { useEffect, useState } from "react";
-import Modal from "./modal";
+import Modal from "./Modals/Modal";
 
 const Card = () => {
   const [fileList, setFileList] = useState([]);

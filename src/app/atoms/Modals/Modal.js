@@ -8,11 +8,10 @@ const Modal = ({ open, setOpen }) => {
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="fixed inset-0 bg-black opacity-50" onClick={() => setOpen(false)}></div>
       <div className="bg-white p-6 rounded shadow-lg z-10">
-        <h2 className="text-lg font-semibold mb-4">Agregar Nuevo Abonadooooooooo</h2>
-        {/* <FormularioTribuna /> */}
-        <p>hola soy yo </p>
+        <h2 className="text-lg font-semibold mb-4">Agregar Nuevo</h2>
+        <FormularioTribuna />
         <button
-          className="mt-4 bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           onClick={() => setOpen(false)}
         >
           Cerrar
