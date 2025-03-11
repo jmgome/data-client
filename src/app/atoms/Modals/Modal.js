@@ -2,6 +2,7 @@ import React from 'react';
 import FormularioTribuna from '../Forms/Formik';
 
 const Modal = ({ open, setOpen }) => {
+
   if (!open) return null;
 
   return (

@@ -6,11 +6,12 @@ const Card = () => {
   const [fileList, setFileList] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
   const [error, setError] = useState(null);
-  const [openModal, setOpenModal] = useState(false); 
+  const [openModal, setOpenModal] = useState(false);
 
   const getAllFile = async () => {
     try {
       const { data } = await getAllFiles();
+      console.log('Datos recibidos:', data); // Verifica la estructura de los datos
       setFileList(data);
       setLoadingFiles(false);
     } catch (error) {
@@ -39,13 +40,13 @@ const Card = () => {
       <div className="flex justify-between items-center mt-5">
         <button
           className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 justify-end ml-auto"
-          onClick={() => setOpenModal(true)} 
+          onClick={() => setOpenModal(true)}
         >
           Agregar nuevo abonado
         </button>
       </div>
-        <Modal open={openModal} setOpen={setOpenModal}/>
-         
+      <Modal open={openModal} setOpen={setOpenModal} />
+
       <div className="mt-5 w-full">
         <div className="overflow-x-auto">
           <table className="table-auto w-full border-collapse">
@@ -54,7 +55,7 @@ const Card = () => {
                 <th className="px-4 py-2 border-b-2">Nombre</th>
                 <th className="px-4 py-2 border-b-2">Apellido</th>
                 <th className="px-4 py-2 border-b-2">No Cc.</th>
-                <th className="px-4 py-2 border-b-2">Tribuna</th>
+                <th className="px-4 py-2 border-b-2">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -64,7 +65,15 @@ const Card = () => {
                     <td className="px-4 py-2 border-b">{file.nombre}</td>
                     <td className="px-4 py-2 border-b">{file.apellido}</td>
                     <td className="px-4 py-2 border-b">{file.documento}</td>
-                    <td className="px-4 py-2 border-b">{file.tribuna}</td>
+                    <td>
+                    <button
+                      className="px-4 py-2 border-b mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      // onClick={() => setOpen(false)}
+                    >
+                      Ver mas
+                    </button>
+                    </td>
+                   
                   </tr>
                 ))
               ) : (
