@@ -1,17 +1,25 @@
 import { getAllFiles } from "@/app/service/service";
 import { useEffect, useState } from "react";
 import Modal from "./Modals/Modal";
+import ModalInfo from "./Modals/ModalInfo";
 
 const Card = () => {
   const [fileList, setFileList] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleOpenInfo = (user) => {
+    setSelectedUser(user);
+    setIsOpenInfo(true);
+  };
 
   const getAllFile = async () => {
     try {
       const { data } = await getAllFiles();
-      console.log('Datos recibidos:', data); // Verifica la estructura de los datos
+      console.log("Datos recibidos:", data); // Verifica la estructura de los datos
       setFileList(data);
       setLoadingFiles(false);
     } catch (error) {
@@ -52,9 +60,9 @@ const Card = () => {
           <table className="table-auto w-full border-collapse">
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-4 py-2 border-b-2">Nombre</th>
-                <th className="px-4 py-2 border-b-2">Apellido</th>
-                <th className="px-4 py-2 border-b-2">No Cc.</th>
+                <th className="px-4 py-2 border-b-2 text-left">Nombre</th>
+                <th className="px-4 py-2 border-b-2 text-left">Apellido</th>
+                <th className="px-4 py-2 border-b-2 text-left">No Cc.</th>
                 <th className="px-4 py-2 border-b-2">Acciones</th>
               </tr>
             </thead>
@@ -62,18 +70,17 @@ const Card = () => {
               {fileList.length > 0 ? (
                 fileList.map((file, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2 border-b">{file.nombre}</td>
-                    <td className="px-4 py-2 border-b">{file.apellido}</td>
-                    <td className="px-4 py-2 border-b">{file.documento}</td>
+                    <td className="px-4 py-2 border-b text-left">{file.nombre}</td>
+                    <td className="px-4 py-2 border-b text-left">{file.apellido}</td>
+                    <td className="px-4 py-2 border-b text-left">{file.documento}</td>
                     <td>
-                    <button
-                      className="px-4 py-2 border-b mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                      // onClick={() => setOpen(false)}
-                    >
-                      Ver mas
-                    </button>
+                      <button
+                        className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        onClick={() => handleOpenInfo(file)}
+                      >
+                        Ver mas
+                      </button>
                     </td>
-                   
                   </tr>
                 ))
               ) : (
@@ -87,6 +94,7 @@ const Card = () => {
           </table>
         </div>
       </div>
+      <ModalInfo open={isOpenInfo} setOpen={setIsOpenInfo} user={selectedUser} />
     </div>
   );
 };
