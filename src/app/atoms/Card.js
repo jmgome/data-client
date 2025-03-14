@@ -68,7 +68,6 @@ const filteredFiles = fileList.filter(
       
       
       </div>
-
       <Modal open={openModal} setOpen={setOpenModal} refreshData={refreshData}/>
 
       <div className="mt-5 w-full">
@@ -86,10 +85,10 @@ const filteredFiles = fileList.filter(
               { filteredFiles.length > 0 ? (
                 filteredFiles.map((file, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2 border-b text-left">
+                    <td className="px-4 py-2 border-b text-left capitalize">
                       {file.nombre}
                     </td>
-                    <td className="px-4 py-2 border-b text-left">
+                    <td className="px-4 py-2 border-b text-left capitalize">
                       {file.apellido}
                     </td>
                     <td className="px-4 py-2 border-b text-left">
