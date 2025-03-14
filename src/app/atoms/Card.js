@@ -2,6 +2,7 @@ import { getAllFiles } from "@/app/service/service";
 import { useEffect, useState } from "react";
 import Modal from "./Modals/Modal";
 import ModalInfo from "./Modals/ModalInfo";
+import FormularioTribuna from "./Forms/Formik";
 
 const Card = () => {
   const [fileList, setFileList] = useState([]);
@@ -19,21 +20,18 @@ const Card = () => {
   const getAllFile = async () => {
     try {
       const { data } = await getAllFiles();
-      console.log("Datos recibidos:", data); // Verifica la estructura de los datos
+      console.log("Datos recibidos:", data);
       setFileList(data);
       setLoadingFiles(false);
     } catch (error) {
       console.error("Error al obtener los archivos:", error);
-      if (error.response) {
-        console.log("Error en la respuesta:", error.response.data);
-      } else if (error.request) {
-        console.log("Error en la solicitud:", error.request);
-      } else {
-        console.log("Error general:", error.message);
-      }
       setError("Error al obtener los archivos.");
       setLoadingFiles(false);
     }
+  };
+
+  const refreshData = () => {
+    getAllFile();
   };
 
   useEffect(() => {
@@ -53,7 +51,14 @@ const Card = () => {
           Agregar nuevo abonado
         </button>
       </div>
-      <Modal open={openModal} setOpen={setOpenModal} />
+      <Modal open={openModal} setOpen={setOpenModal}>
+        <FormularioTribuna
+          refreshData={() => {
+            refreshData(); 
+            setOpenModal(false);
+          }}
+        />
+      </Modal>
 
       <div className="mt-5 w-full">
         <div className="overflow-x-auto">
@@ -70,15 +75,21 @@ const Card = () => {
               {fileList.length > 0 ? (
                 fileList.map((file, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2 border-b text-left">{file.nombre}</td>
-                    <td className="px-4 py-2 border-b text-left">{file.apellido}</td>
-                    <td className="px-4 py-2 border-b text-left">{file.documento}</td>
+                    <td className="px-4 py-2 border-b text-left">
+                      {file.nombre}
+                    </td>
+                    <td className="px-4 py-2 border-b text-left">
+                      {file.apellido}
+                    </td>
+                    <td className="px-4 py-2 border-b text-left">
+                      {file.num_cedula}
+                    </td>
                     <td>
                       <button
                         className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
                         onClick={() => handleOpenInfo(file)}
                       >
-                        Ver mas
+                        Ver más
                       </button>
                     </td>
                   </tr>
@@ -94,8 +105,13 @@ const Card = () => {
           </table>
         </div>
       </div>
-      <ModalInfo open={isOpenInfo} setOpen={setIsOpenInfo} user={selectedUser} />
+      <ModalInfo
+        open={isOpenInfo}
+        setOpen={setIsOpenInfo}
+        user={selectedUser}
+      />
     </div>
   );
 };
+
 export default Card;
