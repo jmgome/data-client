@@ -18,7 +18,6 @@ const Card = () => {
   const getAllFile = async () => {
     try {
       const { data } = await getAllFiles();
-      console.log("Datos recibidos:", data);
       setFileList(data);
       setLoadingFiles(false);
     } catch (error) {
@@ -38,8 +37,6 @@ const Card = () => {
     getAllFile();
   }, []);
 const addUser = (newFile)=>{
-  console.log('newFile', newFile)
-  console.log(fileList)
   setFileList(prev=> [...prev, newFile])
 }
   if (loadingFiles) return <p>Cargando archivos...</p>;

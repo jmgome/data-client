@@ -9,19 +9,6 @@ const FormularioTribuna = ( {refreshData} ) => {
   const [fileList, setFileList] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
   const [error, setError] = useState(null);
-console.log('refreshData', refreshData)
-  // const getAllFile = async () => {
-  //     try {
-  //       const { data } = await getAllFiles();
-  //       console.log("Datos recibidos:", data);
-  //       setFileList(data);
-  //       setLoadingFiles(false);
-  //     } catch (error) {
-  //       console.error("Error al obtener los archivos:", error);
-  //       setError("Error al obtener los archivos.");
-  //       setLoadingFiles(false);
-  //     }
-  //   };
   const formik = useFormik({
     initialValues: {
       nombre: "",
@@ -41,17 +28,11 @@ console.log('refreshData', refreshData)
         asiento: selectedSeats.seats,
         tribuna: selectedSeats.tribuna,
       };
-
-      console.log("Datos a enviar:", dataToSend);
-
       try {
         const response = await UploadAbonado(dataToSend);
 
         if (response.status === 200 || response.status === 201) {
-          alert("Datos guardados correctamente");
-          
           refreshData(); 
-          
         } else {
           console.error("Error al guardar los datos:", response.data);
           alert("Error al guardar los datos. Verifica la información.");
