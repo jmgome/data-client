@@ -41,6 +41,7 @@ const FormularioTribuna = ( {refreshData} ) => {
     onSubmit: async (values, { setErrors }) => {
       if (!selectedSeats.tribuna || selectedSeats.seats.length === 0) {
         setErrors({ asiento: "Por favor, selecciona una tribuna y asientos." });
+        return;
       }
 
       const dataToSend = {
