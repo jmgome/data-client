@@ -2,7 +2,6 @@ import { getAllFiles } from "@/app/service/service";
 import { useEffect, useState } from "react";
 import Modal from "./Modals/Modal";
 import ModalInfo from "./Modals/ModalInfo";
-import FormularioTribuna from "./Forms/Formik";
 
 const Card = () => {
   const [fileList, setFileList] = useState([]);
@@ -11,7 +10,7 @@ const Card = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const handleOpenInfo = (user) => {
     setSelectedUser(user);
     setIsOpenInfo(true);
@@ -20,7 +19,6 @@ const Card = () => {
   const getAllFile = async () => {
     try {
       const { data } = await getAllFiles();
-      console.log("Datos recibidos:", data);
       setFileList(data);
       setLoadingFiles(false);
     } catch (error) {
@@ -30,35 +28,47 @@ const Card = () => {
     }
   };
 
+  const [dataVersion, setDataVersion] = useState(0);
   const refreshData = () => {
     getAllFile();
+    setDataVersion(dataVersion + 1); 
+    setOpenModal(false);
   };
-
   useEffect(() => {
     getAllFile();
   }, []);
-
+const addUser = (newFile)=>{
+  setFileList(prev=> [...prev, newFile])
+}
+const filteredFiles = fileList.filter(
+  (file) =>
+    file.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    file.num_cedula.toString().includes(searchQuery)
+);
   if (loadingFiles) return <p>Cargando archivos...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="w-full p-4">
+      
       <div className="flex justify-between items-center mt-5">
+      <input
+          type="text"
+          className="px-4 py-2 border rounded"
+          placeholder="Filtrar por nombre o cédula"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <button
           className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 justify-end ml-auto"
           onClick={() => setOpenModal(true)}
         >
           Agregar nuevo abonado
         </button>
+      
+      
       </div>
-      <Modal open={openModal} setOpen={setOpenModal}>
-        <FormularioTribuna
-          refreshData={() => {
-            refreshData();
-            setOpenModal(false);
-          }}
-        />
-      </Modal>
+      <Modal open={openModal} setOpen={setOpenModal} refreshData={refreshData}/>
 
       <div className="mt-5 w-full">
         <div className="overflow-x-auto">
@@ -71,9 +81,9 @@ const Card = () => {
                 <th className="px-4 py-2 border-b-2">Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              {fileList.length > 0 ? (
-                fileList.map((file, index) => (
+            <tbody className="text-center">
+              { filteredFiles.length > 0 ? (
+                filteredFiles.map((file, index) => (
                   <tr key={index}>
                     <td className="px-4 py-2 border-b text-left capitalize">
                       {file.nombre}
@@ -86,7 +96,7 @@ const Card = () => {
                     </td>
                     <td>
                       <button
-                        className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="px-4 py-2 mt-4 bg-lime-700 text-white rounded hover:bg-lime-900"
                         onClick={() => handleOpenInfo(file)}
                       >
                         Ver más

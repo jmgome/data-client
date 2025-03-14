@@ -2,14 +2,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup"; // Importar Yup
 import { useState } from "react";
 import AcientosTribuna from "../AcientosTribuna";
-import { UploadAbonado } from "@/app/service/service";
+import { getAllFiles, UploadAbonado } from "@/app/service/service";
 
-const FormularioTribuna = ({ refreshData }) => {
+const FormularioTribuna = ( {refreshData} ) => {
   const [openModalTribuna, setOpenModalTribuna] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState({
     tribuna: "",
     seats: [],
   });
+  const [fileList, setFileList] = useState([]);
+  const [loadingFiles, setLoadingFiles] = useState(true);
+  const [error, setError] = useState(null);
   const formik = useFormik({
     initialValues: {
       nombre: "",
@@ -37,8 +40,7 @@ const FormularioTribuna = ({ refreshData }) => {
     }),
     onSubmit: async (values, { setErrors }) => {
       if (!selectedSeats.tribuna || selectedSeats.seats.length === 0) {
-        setErrors({ asiento: "Debe seleccionar un asiento y una tribuna" });
-        return;
+        setErrors({ asiento: "Por favor, selecciona una tribuna y asientos." });
       }
 
       const dataToSend = {
@@ -46,16 +48,11 @@ const FormularioTribuna = ({ refreshData }) => {
         asiento: selectedSeats.seats,
         tribuna: selectedSeats.tribuna,
       };
-      console.log("Datos a enviar:", dataToSend);
-
       try {
         const response = await UploadAbonado(dataToSend);
 
         if (response.status === 200 || response.status === 201) {
-          alert("Datos guardados correctamente");
-          if (typeof refreshData === 'function') {
-            refreshData();
-          }
+          refreshData(); 
         } else {
           console.error("Error al guardar los datos:", response.data);
           alert("Error al guardar los datos. Verifica la información.");
@@ -69,10 +66,7 @@ const FormularioTribuna = ({ refreshData }) => {
 
   return (
     <>
-      <form
-        onSubmit={formik.handleSubmit}
-        className="flex flex-col space-y-4 w-full"
-      >
+      <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-4 w-full">
         <div className="flex flex-col">
           <label htmlFor="nombre" className="mb-1 font-semibold">
             Nombre
@@ -129,6 +123,7 @@ const FormularioTribuna = ({ refreshData }) => {
             <span className="text-red-500">{formik.errors.num_cedula}</span>
           )}
         </div>
+
         <button
           type="button"
           className="px-4 py-2 border-b mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -160,7 +155,7 @@ const FormularioTribuna = ({ refreshData }) => {
             <AcientosTribuna
               open={openModalTribuna}
               setOpen={setOpenModalTribuna}
-              setSelectedSeats={setSelectedSeats} // Pasar función para actualizar los asientos y tribuna
+              setSelectedSeats={setSelectedSeats}
             />
           </div>
         </div>
