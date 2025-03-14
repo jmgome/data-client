@@ -1,7 +1,7 @@
 import React from 'react';
 import FormularioTribuna from '../Forms/Formik';
 
-const Modal = ({ open, setOpen }) => {
+const Modal = ({ open, setOpen, refreshData }) => {
 
   if (!open) return null;
 
@@ -10,7 +10,7 @@ const Modal = ({ open, setOpen }) => {
       <div className="fixed inset-0 bg-black opacity-50" onClick={() => setOpen(false)}></div>
       <div className="bg-white p-6 rounded shadow-lg z-10 w-full max-w-lg max-h-[600px] flex flex-col justify-between">
         <h2 className="text-lg font-semibold mb-4">Agregar nuevo abonado</h2>
-        <FormularioTribuna />
+        <FormularioTribuna refreshData={refreshData}/>
         <button
           className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           onClick={() => setOpen(false)}

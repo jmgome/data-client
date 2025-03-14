@@ -2,7 +2,6 @@ import { getAllFiles } from "@/app/service/service";
 import { useEffect, useState } from "react";
 import Modal from "./Modals/Modal";
 import ModalInfo from "./Modals/ModalInfo";
-import FormularioTribuna from "./Forms/Formik";
 
 const Card = () => {
   const [fileList, setFileList] = useState([]);
@@ -11,7 +10,6 @@ const Card = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
   const handleOpenInfo = (user) => {
     setSelectedUser(user);
     setIsOpenInfo(true);
@@ -30,14 +28,20 @@ const Card = () => {
     }
   };
 
+  const [dataVersion, setDataVersion] = useState(0);
   const refreshData = () => {
     getAllFile();
+    setDataVersion(dataVersion + 1); 
+    setOpenModal(false);
   };
-
   useEffect(() => {
     getAllFile();
   }, []);
-
+const addUser = (newFile)=>{
+  console.log('newFile', newFile)
+  console.log(fileList)
+  setFileList(prev=> [...prev, newFile])
+}
   if (loadingFiles) return <p>Cargando archivos...</p>;
   if (error) return <p>{error}</p>;
 
@@ -51,14 +55,7 @@ const Card = () => {
           Agregar nuevo abonado
         </button>
       </div>
-      <Modal open={openModal} setOpen={setOpenModal}>
-        <FormularioTribuna
-          refreshData={() => {
-            refreshData(); 
-            setOpenModal(false);
-          }}
-        />
-      </Modal>
+      <Modal open={openModal} setOpen={setOpenModal} refreshData={refreshData}/>
 
       <div className="mt-5 w-full">
         <div className="overflow-x-auto">
@@ -72,7 +69,7 @@ const Card = () => {
               </tr>
             </thead>
             <tbody>
-              {fileList.length > 0 ? (
+              { fileList.length > 0 ? (
                 fileList.map((file, index) => (
                   <tr key={index}>
                     <td className="px-4 py-2 border-b text-left">

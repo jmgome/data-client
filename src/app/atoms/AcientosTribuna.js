@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-const AcientosTribuna = ({ open, setOpen, setSelectedSeats,refreshData }) => {
+const AcientosTribuna = ({ open, setOpen, setSelectedSeats, refreshData }) => {
   const numRows = 5;
   const seatsPerRow = 10;
   const totalSeatsPerSection = numRows * seatsPerRow;
   const maxSeatsToShow = 20;
   const [selectedSeats, setInternalSelectedSeats] = useState([]);
-  const [selectedTribuna, setSelectedTribuna] = useState(''); // Nuevo estado para la tribuna seleccionada
+  const [selectedTribuna, setSelectedTribuna] = useState('');
   const [showMoreSeats, setShowMoreSeats] = useState({});
 
   const toggleSeatSelection = (section, row, seat) => {
@@ -18,7 +18,7 @@ const AcientosTribuna = ({ open, setOpen, setSelectedSeats,refreshData }) => {
         return [...prevSelectedSeats, seatId];
       }
     });
-    setSelectedTribuna(section); // Actualizar la tribuna seleccionada
+    setSelectedTribuna(section); 
   };
 
   const toggleShowMore = (section) => {
@@ -29,8 +29,8 @@ const AcientosTribuna = ({ open, setOpen, setSelectedSeats,refreshData }) => {
   };
 
   const handleSaveSeats = () => {
-    setSelectedSeats({ seats: selectedSeats, tribuna: selectedTribuna }); // Pasar asientos y tribuna seleccionada
-    setOpen(false); // Cerrar modal
+    setSelectedSeats({ seats: selectedSeats, tribuna: selectedTribuna }); 
+    setOpen(false);
   };
 
   const sections = ['Norte', 'Sur', 'Este', 'Oeste'];
