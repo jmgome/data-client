@@ -45,7 +45,7 @@ const filteredFiles = fileList.filter(
     file.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
     file.num_cedula.toString().includes(searchQuery)
 );
-  if (loadingFiles) return <p>Cargando archivos...</p>;
+  if (loadingFiles) return <p style={{display:"flex", justifyContent:"center"}}><img src="https://i.gifer.com/Zgmm.gif"alt="Cargando archivos..."/></p>;
   if (error) return <p>{error}</p>;
 
   return (

@@ -3,9 +3,12 @@ import { useState } from "react";
 import AcientosTribuna from "../AcientosTribuna";
 import { getAllFiles, UploadAbonado } from "@/app/service/service";
 
-const FormularioTribuna = ( {refreshData} ) => {
+const FormularioTribuna = ({ refreshData }) => {
   const [openModalTribuna, setOpenModalTribuna] = useState(false);
-  const [selectedSeats, setSelectedSeats] = useState({ seats: [], tribuna: "" });
+  const [selectedSeats, setSelectedSeats] = useState({
+    seats: [],
+    tribuna: "",
+  });
   const [fileList, setFileList] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
   const [error, setError] = useState(null);
@@ -14,6 +17,7 @@ const FormularioTribuna = ( {refreshData} ) => {
       nombre: "",
       apellido: "",
       num_cedula: "",
+      cor_electronico: "",
       tribuna: "",
       asiento: "",
     },
@@ -28,11 +32,19 @@ const FormularioTribuna = ( {refreshData} ) => {
         asiento: selectedSeats.seats,
         tribuna: selectedSeats.tribuna,
       };
+
       try {
         const response = await UploadAbonado(dataToSend);
 
         if (response.status === 200 || response.status === 201) {
-          refreshData(); 
+          refreshData();
+          const correoEnviado = response.data?.correoEnviado;
+
+          if (correoEnviado) {
+            alert("¡Abonado guardado y correo enviado exitosamente!");
+          } else {
+            alert("Abonado guardado, pero hubo un error al enviar el correo.");
+          }
         } else {
           console.error("Error al guardar los datos:", response.data);
           alert("Error al guardar los datos. Verifica la información.");
@@ -46,7 +58,10 @@ const FormularioTribuna = ( {refreshData} ) => {
 
   return (
     <>
-      <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-4 w-full">
+      <form
+        onSubmit={formik.handleSubmit}
+        className="flex flex-col space-y-4 w-full"
+      >
         <div className="flex flex-col">
           <label htmlFor="nombre" className="mb-1 font-semibold">
             Nombre
@@ -87,7 +102,21 @@ const FormularioTribuna = ( {refreshData} ) => {
             type="text"
             placeholder="Cédula"
             onChange={formik.handleChange}
-            value={formik.values.num_cedula} 
+            value={formik.values.num_cedula}
+            className="p-2 border rounded w-full"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="cor_electronico" className="mb-1 font-semibold">
+            Correo Electronico
+          </label>
+          <input
+            id="cor_electronico"
+            name="cor_electronico"
+            type="text"
+            placeholder="Correo Electronico"
+            onChange={formik.handleChange}
+            value={formik.values.cor_electronico}
             className="p-2 border rounded w-full"
           />
         </div>
