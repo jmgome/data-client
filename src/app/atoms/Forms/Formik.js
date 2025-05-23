@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import * as Yup from "yup"; // Importar Yup
 import { useState } from "react";
 import AcientosTribuna from "../AcientosTribuna";
 import { getAllFiles, UploadAbonado } from "@/app/service/service";
@@ -6,8 +7,8 @@ import { getAllFiles, UploadAbonado } from "@/app/service/service";
 const FormularioTribuna = ({ refreshData }) => {
   const [openModalTribuna, setOpenModalTribuna] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState({
-    seats: [],
     tribuna: "",
+    seats: [],
   });
   const [fileList, setFileList] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(true);
@@ -21,9 +22,26 @@ const FormularioTribuna = ({ refreshData }) => {
       tribuna: "",
       asiento: "",
     },
-    onSubmit: async (values) => {
+    validationSchema: Yup.object({
+      nombre: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Solo se permiten letras")
+        .required("El nombre es obligatorio HPT")
+        .max(30, "Máximo 30 caracteres")
+        .min(3, "Mínimo 3 caracteres"),
+      apellido: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Solo se permiten letras")
+        .required("El apellido es obligatorio HPT")
+        .max(30, "Máximo 30 caracteres")
+        .min(3, "Mínimo 3 caracteres"),
+      num_cedula: Yup.string()
+        .matches(/^\d+$/, "Solo se permiten números")
+        .min(7, "La cédula debe tener al menos 7 dígitos")
+        .max(10, "La cédula no puede tener más de 10 dígitos")
+        .required("La cédula es obligatoria"),
+    }),
+    onSubmit: async (values, { setErrors }) => {
       if (!selectedSeats.tribuna || selectedSeats.seats.length === 0) {
-        alert("Por favor, selecciona una tribuna y asientos.");
+        setErrors({ asiento: "Por favor, selecciona una tribuna y asientos." });
         return;
       }
 
@@ -72,9 +90,13 @@ const FormularioTribuna = ({ refreshData }) => {
             type="text"
             placeholder="Nombre"
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             value={formik.values.nombre}
             className="p-2 border rounded w-full"
           />
+          {formik.touched.nombre && formik.errors.nombre && (
+            <span className="text-red-500">{formik.errors.nombre}</span>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -87,9 +109,13 @@ const FormularioTribuna = ({ refreshData }) => {
             type="text"
             placeholder="Apellido"
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             value={formik.values.apellido}
             className="p-2 border rounded w-full"
           />
+          {formik.touched.apellido && formik.errors.apellido && (
+            <span className="text-red-500">{formik.errors.apellido}</span>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -119,6 +145,9 @@ const FormularioTribuna = ({ refreshData }) => {
             value={formik.values.cor_electronico}
             className="p-2 border rounded w-full"
           />
+          {formik.touched.num_cedula && formik.errors.num_cedula && (
+            <span className="text-red-500">{formik.errors.num_cedula}</span>
+          )}
         </div>
 
         <button
@@ -129,6 +158,9 @@ const FormularioTribuna = ({ refreshData }) => {
           Seleccionar tribuna y asiento
         </button>
 
+        {formik.errors.asiento && (
+          <span className="text-red-500">{formik.errors.asiento}</span>
+        )}
         <button
           type="submit"
           className="mt-4 bg-lime-700 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -137,7 +169,7 @@ const FormularioTribuna = ({ refreshData }) => {
         </button>
       </form>
 
-      {openModalTribuna && (
+       {openModalTribuna && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-3/4">
             <button
